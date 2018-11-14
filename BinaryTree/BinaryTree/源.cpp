@@ -50,6 +50,22 @@ void BinaryTree<T>::preOrder(BinaryTreeNode<T>*t) {
 		preOrder(t->getRightChild());
 	}
 }
+template<class T>
+void BinaryTree<T>::inOrder(BinaryTreeNode<T>* t) {
+	if (t) {
+		inOrder(t->getLeftChild());
+		cout << t->getData() << " ";
+		inOrder(t->getRightChild());
+	}
+}
+template<class T>
+void BinaryTree<T>::postOrder(BinaryTreeNode<T>*t) {
+	if (t) {
+		postOrder(t->getLeftChild());
+		postOrder(t->getRightChild());
+		cout << t->getData() << " ";
+	}
+}
 int main() {
 	BinaryTreeNode<int>* t1 = new BinaryTreeNode<int>(1);
 	BinaryTreeNode<int>* t2 = new BinaryTreeNode<int>(2);
@@ -58,7 +74,7 @@ int main() {
 	t1->setRightChild(t3);
 	BinaryTree<int>* tree1 = new BinaryTree<int>();
 	tree1->createTree(t1);
-	BinaryTree<int>::preOrder(tree1->getRoot());
+	BinaryTree<int>::postOrder(tree1->getRoot());
 	system("pause");
 	return 0;
 }

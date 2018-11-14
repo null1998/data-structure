@@ -7,6 +7,8 @@ public:
 	BinaryTreeNode<T>* getRoot();
 	void createTree(BinaryTreeNode<T>* t);
 	static void preOrder(BinaryTreeNode<T>* t);
+	static void inOrder(BinaryTreeNode<T>* t);
+	static void postOrder(BinaryTreeNode<T>*t);
 private:
 	BinaryTreeNode<T>* root;
 };
