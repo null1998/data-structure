@@ -4,9 +4,9 @@ using namespace std;
 template<class T>
 class ChainNode{
 public:
-	setData(T data) { this->data = data; }
-	getData() { return this->data; }
-	ChianNode<T>* link=NULL;
+	void setData(T data) { this->data = data; }
+	T getData() { return this->data; }
+	ChainNode<T>* link=NULL;
 private:
 	T data=NULL;		 
 };
@@ -14,16 +14,16 @@ private:
 template<class T>
 class LinkStack {
 public:
-	ChainNode<T>* push(T data);
+	void push(T data);
 	T pop();
-	bool isEmpty() { return top == Null; }
-	T getTop() { return top->data; }
-	ChainNode<T>* top=Null;
+	bool isEmpty() { return top->getData()==NULL; }
+	T getTop() { return top->getData(); }
+	ChainNode<T>* top=new ChainNode<T>();
 };
 
 template<class T>
-ChainNode<T>* LinkStack::push(T data) {
-	ChainNode<T>* newNode = new ChainNode<T>;
+void LinkStack<T>::push(T data) {
+	ChainNode<T>* newNode = new ChainNode<T>();
 	newNode->setData(data);
 	if (top == NULL) {
 		top = newNode;
@@ -63,10 +63,10 @@ int comparePriority(char a,char b) {
 	}
 	return pri[i][j];
 }
-char* ToRPN(char a[100]) {
-	char b[100];
-	LinkStack<char>* s;
+char* toRPN(char* a) {
+	LinkStack<char>* s=new LinkStack<char>();
 	int j=0;
+	char* b = new char[j];
 	for (int i = 0; i < 100 && a[i] != NULL; i++) {
 		if (a[i] != '+'&&a[i] != '-'&&a[i] != '*'&&a[i] != '/'&&a[i] != '('&&a[i] != ')') {
 			b[j] = a[i];
@@ -87,9 +87,11 @@ char* ToRPN(char a[100]) {
 					int priority=comparePriority(s->getTop(),a[i]);
 					if (priority == 1) {
 						s->push(a[i]);
+
+
 					}
 					if (priority == 2 || priority == 3) {
-						while (comparePriority(s->getTop(), a[i]) != 1&&!s->isEmpty()) {
+						while (!s->isEmpty()&&comparePriority(s->getTop(), a[i]) != 1) {
 							b[j] = s->pop();
 							j++;
 						}
@@ -98,27 +100,31 @@ char* ToRPN(char a[100]) {
 		}
 
 	}
+	while(!s->isEmpty()) {
+		b[j] = s->pop();
+		j++;
+	}
 	return b;
 }
-int calculate(char b[100]) {
-	LinkStack<char>* num;
-	int tmp;
+int calculate(char* b) {
+	LinkStack<char>* num=new LinkStack<char>();
+	int tmp=0;
 	for (int i = 0; i < 100 && b[i] != NULL; i++) {
 		switch (b[i]) {
 		 case '+':
-			 int tmp=(num->pop() + 0) + (num->pop() + 0);
+			 tmp=(num->pop() + 0) + (num->pop() + 0);
 			 num->push(tmp);
-			 break;
+			 continue;
 		 case '-':
-			 int tmp = (num->pop() + 0) - (num->pop() + 0);
+			 tmp = (num->pop() + 0) - (num->pop() + 0);
 			 num->push(tmp);
 			 break;
 		 case '*':
-			 int tmp = (num->pop() + 0) * (num->pop() + 0);
+			 tmp = (num->pop() + 0) * (num->pop() + 0);
 			 num->push(tmp);
 			 break;
 		 case '/':
-			 int tmp = (num->pop() + 0) / (num->pop() + 0);
+			 tmp = (num->pop() + 0) / (num->pop() + 0);
 			 num->push(tmp);
 			 break;
 		 default:
@@ -127,4 +133,10 @@ int calculate(char b[100]) {
 		}
 	}
 	return tmp;
+}
+int main() {
+	char* a = "2+3*(4+5)-6/4";
+	char* b = toRPN(a);
+	cout << calculate(b);
+	system("pause");
 }
