@@ -29,7 +29,7 @@ public:
 	int in_order(BinaryTreeNode<T>* root, int m, int max);
 	int post_order(BinaryTreeNode<T>* root, int m, int max);
 	void order(BinaryTreeNode<T>* root);
-	void order1(BinaryTreeNode<T>* node, Queue<T>*q);
+	void order1(BinaryTreeNode<T>* root, Queue<T>*q);
 	void construct_tree(BinaryTreeNode<T>** pre_btns, BinaryTreeNode<T>** in_btns, int length);
 	BinaryTreeNode<T>* construct(BinaryTreeNode<T>** pre_btns, BinaryTreeNode<T>** in_btns, int length);
 };
@@ -107,29 +107,46 @@ void BinaryTree<T>::order(BinaryTreeNode<T>* root) {
 	Queue<T>* q = new Queue<T>();
 	q->push(root);
 	BinaryTreeNode<T>* father_node = q->pop();
-	cout << father_node->data<<",";
-	q->push(father_node->leftChild);
-	q->push(father_node->rightChild);
-	order1(father_node->leftChild, q);
-	while (q->top->data != NULL) {
-		cout << q->top->data<<",";
+	cout << father_node->data;
+	if (father_node->leftChild || father_node->rightChild) {
+		cout << ",";
+	}
+	if (father_node->leftChild != NULL) {
+		q->push(father_node->leftChild);
+	}
+	if (father_node->rightChild != NULL) {
+		q->push(father_node->rightChild);
+	}
+	if (father_node->leftChild != NULL) {
+		order1(father_node->leftChild, q);
+	}
+	
+	while (q->top!= NULL) {
+		cout << q->top->data;
+		if (q->top->link != NULL) {
+			cout << ",";
+		}
 		q->top = q->top->link;
 	}
 }
 template<class T>
-void BinaryTree<T>::order1(BinaryTreeNode<T>* node, Queue<T>*q) {
+void BinaryTree<T>::order1(BinaryTreeNode<T>* root, Queue<T>*q) {
 	BinaryTreeNode<T>* father_node = q->pop();
-	cout<< father_node->data << ",";
-	if (father_node->leftChild->data != NULL) {
+	cout<< father_node->data;
+	if (father_node->leftChild!= NULL) {
 		q->push(father_node->leftChild);
 	}
-	if (father_node->rightChild->data!=NULL) {
+	if (father_node->rightChild!=NULL) {
 		q->push(father_node->rightChild);
+	}
+	if (q->top != NULL) {
+		cout << ",";
 	}
 	if (father_node->leftChild == NULL) {
 		return;
 	}
-	order1(father_node->leftChild, q);
+	//order1(father_node->leftChild, q);
+	//
 
 }
 template<class T>
@@ -154,25 +171,27 @@ void BinaryTree<T>::construct_tree(BinaryTreeNode<T>** pre_btns, BinaryTreeNode<
 	if (left_length != 0) {
 		right_length = length - left_length - 1;
 		pre_btns[1]->leftChild = pre_btns[2];
-		pre_btns[1]->rightChild = pre_btns[2 + left_length];
-		BinaryTreeNode<T>** pre_left = new BinaryTreeNode<T>*[left_length + 1];
-		BinaryTreeNode<T>** in_left = new BinaryTreeNode<T>*[left_length + 1];
 		BinaryTreeNode<T>** pre_right = new BinaryTreeNode<T>*[right_length + 1];
 		BinaryTreeNode<T>** in_right = new BinaryTreeNode<T>*[right_length + 1];
+		BinaryTreeNode<T>** pre_left = new BinaryTreeNode<T>*[left_length + 1];
+		BinaryTreeNode<T>** in_left = new BinaryTreeNode<T>*[left_length + 1];
 		for (int i = 1; i <= left_length; i++) {
 			pre_left[i] = pre_btns[i + 1];
 		}
 		for (int i = 1; i <= left_length; i++) {
 			in_left[i] = in_btns[i];
 		}
-		for (int i = 1; i <= right_length; i++) {
-			pre_right[i] = pre_btns[i + 1 + left_length];
-		}
-		for (int i = 1; i <= right_length; i++) {
-			in_right[i] = in_btns[i + left_length + 1];
-		}
 		construct_tree(pre_left, in_left, left_length);
-		construct_tree(pre_right, in_right, right_length);
+		if (right_length != 0) {
+			pre_btns[1]->rightChild = pre_btns[2 + left_length];
+			for (int i = 1; i <= right_length; i++) {
+				pre_right[i] = pre_btns[i + 1 + left_length];
+			}
+			for (int i = 1; i <= right_length; i++) {
+				in_right[i] = in_btns[i + left_length + 1];
+			}
+			construct_tree(pre_right, in_right, right_length);
+		}
 	}
 	else {
 		return;
@@ -242,8 +261,8 @@ int main() {
 	cout << "OutPut2" << endl;
 	tree2->post_order(tree2->root, 0, strlen(b));
 	cout << endl;
-	//tree2->order(tree2->root);
-	cout << endl;
+	tree2->order(tree2->root);
+	cout << endl<<"End"<<endl;
 	system("pause");
 	return 0;
 }
