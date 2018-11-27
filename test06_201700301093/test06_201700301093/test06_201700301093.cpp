@@ -117,8 +117,10 @@ int main() {
 	int k = 0;
 	int j;
 	int count = 0;
-	int* s = new int[n];
-	int* s2 = new int[n];
+	/*int* s = new int[n];
+	int* s2 = new int[n];*/
+	int s[20];
+	int s2[20];
 	Heap<int>* heap = new Heap<int>();
 	BS_Tree<int>* bstree = new BS_Tree<int>();
 	cout << "Input" << endl;
